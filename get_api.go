@@ -11,12 +11,12 @@ import (
 
 // GetAPIClient is an interface for a get method api.
 type GetAPIClient interface {
-	GetRate(ctx context.Context, pair *CurrencyPair) (*Rate, error)
+	GetRate(ctx context.Context, pair string) (*Rate, error)
 }
 
 // GetRate fetches currenct rate for specified currency pair
-func (c *client) GetRate(ctx context.Context, pair *CurrencyPair) (*Rate, error) {
-	url := fmt.Sprintf("rate/%s", pair.Name)
+func (c *client) GetRate(ctx context.Context, pair string) (*Rate, error) {
+	url := fmt.Sprintf("rate/%s", pair)
 	res, err := c.do(ctx, http.MethodGet, url, nil)
 	if err != nil {
 		return nil, err
