@@ -36,6 +36,19 @@ func run() error {
 			return err
 		}
 
+	case "getdepositlimit":
+		cli := shapeshift.New()
+		if os.Args[2] == "" {
+			return errors.New("Specify a currency pair sush as btc_ltc")
+		}
+		res, err := cli.GetDepositLimit(context.Background(), os.Args[2])
+		if err != nil {
+			return err
+		}
+		if err := json.NewEncoder(os.Stdout).Encode(res); err != nil {
+			return err
+		}
+
 	default:
 		return errors.Errorf("does not support %q", os.Args[1])
 	}
