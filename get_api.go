@@ -13,6 +13,7 @@ import (
 type GetAPIClient interface {
 	GetRate(ctx context.Context, pair string) (*Rate, error)
 	GetDepositLimit(ctx context.Context, pair string) (*DepositLimit, error)
+	GetMarketInfo(ctx context.Context, pair string) (*MarketInfo, error)
 }
 
 // GetRate fetches currenct rate for specified currency pair
@@ -43,4 +44,19 @@ func (c *client) GetDepositLimit(ctx context.Context, pair string) (*DepositLimi
 		return nil, errors.Wrap(err, "")
 	}
 	return depositLimitResp, nil
+}
+
+// GetMarketInfo fetches current market info for specified currency pair
+func (c *client) GetMarketInfo(ctx context.Context, pair string) (*MarketInfo, error) {
+	url := fmt.Sprintf("marketinfo/%s", pair)
+	res, err := c.do(ctx, http.MethodGet, url, nil)
+	if err != nil {
+		return nil, err
+	}
+
+	marketInfoResp := new(MarketInfo)
+	if err := json.Unmarshal(res, marketInfoResp); err != nil {
+		return nil, errors.Wrap(err, "")
+	}
+	return marketInfoResp, nil
 }
