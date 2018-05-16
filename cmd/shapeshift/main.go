@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"os"
+	"strconv"
 
 	"github.com/pkg/errors"
 	shapeshift "github.com/yuzushioh/go-shapeshift"
@@ -55,6 +56,23 @@ func run() error {
 			return errors.New("Specify a currency pair sush as btc_ltc")
 		}
 		res, err := cli.GetMarketInfo(context.Background(), os.Args[2])
+		if err != nil {
+			return err
+		}
+		if err := json.NewEncoder(os.Stdout).Encode(res); err != nil {
+			return nil
+		}
+
+	case "getrecenttransactions":
+		cli := shapeshift.New()
+		if os.Args[2] == "" {
+			return errors.New("Specify the transaction limit number")
+		}
+		limit, err := strconv.Atoi(os.Args[2])
+		if err != nil {
+			return err
+		}
+		res, err := cli.GetTransactionList(context.Background(), limit)
 		if err != nil {
 			return err
 		}
