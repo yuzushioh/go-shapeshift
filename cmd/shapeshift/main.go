@@ -80,6 +80,19 @@ func run() error {
 			return nil
 		}
 
+	case "timeremaining":
+		cli := shapeshift.New()
+		if os.Args[2] == "" {
+			return errors.New("Specify the address")
+		}
+		res, err := cli.GetTimeRemaining(context.Background(), os.Args[2])
+		if err != nil {
+			return err
+		}
+		if err := json.NewEncoder(os.Stdout).Encode(res); err != nil {
+			return nil
+		}
+
 	default:
 		return errors.Errorf("does not support %q", os.Args[1])
 	}
